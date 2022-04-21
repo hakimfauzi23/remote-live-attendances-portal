@@ -1,9 +1,10 @@
-const create = require("./create");
 const getAll = require("./getAll");
 const getByEmployee = require("./getByEmployee");
-
+const clockIn = require("./clockIn");
+const clockOut = require("./clockOut");
 module.exports = {
-  create,
   getAll,
   getByEmployee,
+  clockIn,
+  clockOut,
 };

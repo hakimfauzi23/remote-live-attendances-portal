@@ -5,9 +5,9 @@ const api = apiAdapter(URL_ABSENCE_SERVICE);
 
 module.exports = async (req, res) => {
   try {
-    const absence = await api.post("/api/absences", req.body);
+    const absence = await api.put("/api/absences/clock-out", req.body);
     return res.json(absence.data);
-  } catch (error) {
+  } catch (err) {
     if (err.code === "ECONNREFUSED") {
       return res.status(500).send(err);
     }
