@@ -6,5 +6,6 @@ module.exports = (app) => {
   router.get("/employee", absences.findByEmployee);
   router.post("/clock-in", absences.clockIn);
   router.put("/clock-out", absences.clockOut);
+  router.get("/check-attendances", absences.checkAttendances);
   app.use("/api/absences", router);
 };

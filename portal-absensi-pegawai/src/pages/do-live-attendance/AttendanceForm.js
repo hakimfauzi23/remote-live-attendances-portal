@@ -12,6 +12,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import EmployeeSelect from "../../components/EmployeeSelect";
+import AttendanceModal from "../../components/AttendanceModal";
 import axios from "axios";
 const API_GATEWAY = process.env.REACT_APP_API_HOST;
 
@@ -22,6 +23,7 @@ function AttendanceForm() {
   const [spinner, setSpinner] = useState(false);
   const [geolocation, setGeolocation] = useState({});
   const [report, setReport] = useState("");
+  const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
     if (employee_id) {
@@ -47,14 +49,13 @@ function AttendanceForm() {
   const locationCoord = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
-        console.log([position.coords.latitude, position.coords.longitude]);
         setGeolocation({
           lat: position.coords.latitude,
           lgt: position.coords.longitude,
         });
       });
     } else {
-      console.log("geolocation is not supported");
+      alert("geolocation is not supported");
     }
   };
 
@@ -71,7 +72,7 @@ function AttendanceForm() {
                 <EmployeeSelect stateChanger={setEmployeeId} />
               </Row>
               <Row className="mt-5">
-                <Col md={5}>
+                <Col md={5} className="mb-4">
                   <Card className="bg-primary shadow">
                     <Card.Header className="text-center">
                       <Card.Title className="text-white">ID CARD</Card.Title>
@@ -127,9 +128,9 @@ function AttendanceForm() {
                     </Card.Body>
                   </Card>
                 </Col>
-                <Col md={4}>
+                <Col md={4} className="mb-4">
                   <Card className="text-center">
-                    <Card.Title>This is your position</Card.Title>
+                    <Card.Title>YOUR LOCATION</Card.Title>
                     <iframe
                       width="100%"
                       height="278px"
@@ -138,20 +139,42 @@ function AttendanceForm() {
                     ></iframe>
                   </Card>
                 </Col>
-                <Col>
-                  <Card>
+                <Col className="text-center">
+                  <Card className="mb-4">
                     <Form>
                       <Form.Control
                         as="textarea"
-                        rows={4}
+                        rows={10}
                         placeholder={"input your report . . ."}
+                        onChange={(e) => setReport(e.target.value)}
                       />
                     </Form>
                   </Card>
+                  {employee_id ? (
+                    <Button
+                      className="shadow"
+                      variant="success"
+                      onClick={() => setModalShow(true)}
+                    >
+                      Do Live Attendance
+                    </Button>
+                  ) : (
+                    ""
+                  )}
                 </Col>
               </Row>
             </Card.Body>
           </Card>
+
+          <AttendanceModal
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+            data={{
+              employee_id: employee_id,
+              geolocation: geolocation,
+              report: report,
+            }}
+          />
         </Container>
       </div>
     </section>

@@ -226,3 +226,50 @@ exports.clockOut = (req, res) => {
       });
   }, 1000);
 };
+
+exports.checkAttendances = (req, res) => {
+  if (!req.query.employee_id) {
+    res.status(400).send({
+      message: "employee_id can not be empty!",
+    });
+    return;
+  }
+
+  /* 
+  TYPE 1 = CLOCK-IN CHECK
+  TYPE 2 = CLOCK-OUT CHECK
+  */
+
+  if (req.query.type == 1) {
+    Absence.findOne({
+      raw: true,
+      where: {
+        [Op.and]: [
+          { employee_id: req.query.employee_id },
+          { date: req.query.date },
+        ],
+      },
+    }).then((data) => {
+      res.status(200).send({
+        success: true,
+        data: data,
+      });
+    });
+  } else {
+    Absence.findOne({
+      raw: true,
+      where: {
+        [Op.and]: [
+          { employee_id: req.query.employee_id },
+          { date: req.query.date },
+          { clock_out: { [Op.ne]: null } },
+        ],
+      },
+    }).then((data) => {
+      res.status(200).send({
+        success: true,
+        data: data,
+      });
+    });
+  }
+};

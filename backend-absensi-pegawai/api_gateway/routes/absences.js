@@ -4,6 +4,7 @@ const router = express.Router();
 const absencesHandler = require("./handler/absences");
 router.post("/clock-in", absencesHandler.clockIn);
 router.put("/clock-out", absencesHandler.clockOut);
+router.get("/check-attendances", absencesHandler.checkAttendances);
 router.get("/", absencesHandler.getAll);
 router.get("/employee", absencesHandler.getByEmployee);
 
